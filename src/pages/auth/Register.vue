@@ -1,80 +1,110 @@
 <template>
-  <!-- Page wrapper: full-height background and centered card -->
-  <div class="min-h-screen bg-slate-100">
-    <div class="mx-auto flex min-h-screen max-w-md items-center px-4">
-      <div class="w-full bg-white p-8 shadow-xl rounded-sm">
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+      
+      <div>
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          បង្កើតគណនីថ្មី
+        </h2>
+        <p class="mt-2 text-center text-sm text-gray-600">
+          ឬ 
+          <router-link to="/login" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+            ត្រឡប់ទៅទំព័រចូលប្រព័ន្ធវិញ
+          </router-link>
+        </p>
+      </div>
 
-        <!-- Header: title and subtitle -->
-        <div class="mb-6 text-center">
-          <h1 class="text-2xl font-semibold text-slate-900">Create account</h1>
-          <p class="mt-1 text-sm text-slate-500">Start your journey</p>
+      <form class="mt-8 space-y-4" @submit.prevent="handleRegister">
+        <div class="rounded-md space-y-4">
+          
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700 mb-1">ឈ្មោះអ្នកប្រើប្រាស់ (Username)</label>
+            <input 
+              id="username" 
+              name="username" 
+              type="text" 
+              required 
+              v-model="username"
+              class="appearance-none relative block w-full px-3 py-2.5 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+              placeholder="ឧទាហរណ៍: Nalen"
+            />
+          </div>
+
+          <div>
+            <label for="email-address" class="block text-sm font-medium text-gray-700 mb-1">អ៊ីមែល (Email)</label>
+            <input 
+              id="email-address" 
+              name="email" 
+              type="email" 
+              required 
+              v-model="email"
+              class="appearance-none relative block w-full px-3 py-2.5 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+              placeholder="ឧទាហរណ៍: user@gmail.com"
+            />
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">លេខសម្ងាត់ (Password)</label>
+            <input 
+              id="password" 
+              name="password" 
+              type="password" 
+              required 
+              v-model="password"
+              class="appearance-none relative block w-full px-3 py-2.5 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+              placeholder="••••••••"
+            />
+          </div>
         </div>
 
-        <!-- Form: uses @submit.prevent to run `onSubmit` without reloading the page -->
-        <form class="space-y-4" @submit.prevent="onSubmit">
+        <div class="flex items-center">
+          <input 
+            id="agree-terms" 
+            name="agree-terms" 
+            type="checkbox" 
+            required
+            v-model="agreeTerms"
+            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+          />
+          <label for="agree-terms" class="ml-2 block text-sm text-gray-900 select-none">
+            ខ្ញុំយល់ព្រមទៅនឹងរាល់លក្ខខណ្ឌនានា
+          </label>
+        </div>
 
-          <!-- Name input group: label + BaseInput bound to `form.name` -->
-          <div class="space-y-2">
-            <label class="text-sm font-medium text-slate-700">Name</label>
-            <BaseInput v-model="form.name" type="text" placeholder="Your name" required />
-          </div>
+        <div class="pt-2">
+          <button 
+            type="submit" 
+            class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
+          >
+            ចុះឈ្មោះគណនី
+          </button>
+        </div>
+      </form>
 
-          <!-- Email input group: label + BaseInput bound to `form.email` -->
-          <div class="space-y-2">
-            <label class="text-sm font-medium text-slate-700">Email</label>
-            <BaseInput v-model="form.email" type="email" placeholder="you@example.com" required />
-          </div>
-
-          <!-- Password input group: label + BaseInput bound to `form.password` -->
-          <div class="space-y-2">
-            <label class="text-sm font-medium text-slate-700">Password</label>
-            <BaseInput v-model="form.password" type="password" placeholder="Create a password" required />
-          </div>
-
-          <!-- Submit button: receives `loading` state and is disabled until all fields are filled -->
-          <BaseButton text="Create Account" color="primary" :loading="loading" :disabled="!form.name || !form.email || !form.password" @click="onSubmit" />
-
-        </form>
-
-        <!-- Footer: link to login page -->
-        <p class="mt-6 text-center text-sm text-slate-600">
-          Already have an account?
-          <RouterLink class="font-semibold text-blue-600 hover:text-blue-700" to="/login">Login</RouterLink>
-        </p>
-
-      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-// Imports: Vue composition API helpers and base UI components
-import { reactive, ref } from 'vue'
-import BaseInput from '@/components/base/BaseInput.vue'
-import BaseButton from '@/components/base/BaseButton.vue'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-// `loading` toggles UI state while async requests are ongoing
-const loading = ref(false)
+const router = useRouter()
 
-// `form` stores user input and is reactive so v-model keeps it in sync
-const form = reactive({
-  name: '',
-  email: '',
-  password: ''
-})
+const username = ref('')
+const email = ref('')
+const password = ref('')
+const agreeTerms = ref(false)
 
-// `onSubmit` validates inputs, sets loading, performs the submit (simulated here),
-// then clears loading. Replace the simulated part with a real API call.
-const onSubmit = async () => {
-  if (!form.name || !form.email || !form.password) return
-
-  loading.value = true
-
-  console.log('Register submit', { ...form })
-
-  // simulate API latency
-  await new Promise(r => setTimeout(r, 1000))
-
-  loading.value = false
+const handleRegister = () => {
+  console.log('ទិន្នន័យចុះឈ្មោះ:', {
+    username: username.value,
+    email: email.value,
+    password: password.value
+  })
+  
+  alert('បង្កើតគណនីបានជោគជ័យ! សូមចូលប្រព័ន្ធ។')
+  // ចុះឈ្មោះរួច ឲ្យវាលោតទៅទំព័រ Login វិញដើម្បីឲ្យគាត់ Login ចូល
+  router.push('/login')
 }
 </script>

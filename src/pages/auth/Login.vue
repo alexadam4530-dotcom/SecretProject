@@ -1,77 +1,110 @@
 <template>
-  <!-- Page wrapper: full-height background and centered card -->
-  <div class="min-h-screen bg-slate-100">
-    <div class="mx-auto flex min-h-screen max-w-md items-center px-4">
-      <div class="w-full bg-white p-8 shadow-xl rounded-sm">
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+      
+      <div>
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          ចូលប្រើប្រាស់ប្រព័ន្ធ
+        </h2>
+        <p class="mt-2 text-center text-sm text-gray-600">
+          ឬ 
+          <router-link to="/register" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+            បង្កើតគណនីថ្មីនៅទីនេះ
+          </router-link>
+        </p>
+      </div>
 
-        <!-- Header: title and subtitle -->
-        <div class="mb-6 text-center">
-          <h1 class="text-2xl font-semibold text-slate-900">Welcome back</h1>
-          <p class="mt-1 text-sm text-slate-500">Login to continue</p>
+      <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
+        <div class="rounded-md space-y-4">
+          
+          <div>
+            <label for="email-address" class="block text-sm font-medium text-gray-700 mb-1">អ៊ីមែល (Email)</label>
+            <input 
+              id="email-address" 
+              name="email" 
+              type="email" 
+              autocomplete="email" 
+              required 
+              v-model="email"
+              class="appearance-none relative block w-full px-3 py-2.5 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
+              placeholder="ឧទាហរណ៍: user@gmail.com"
+            />
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">លេខសម្ងាត់ (Password)</label>
+            <input 
+              id="password" 
+              name="password" 
+              type="password" 
+              autocomplete="current-password" 
+              required 
+              v-model="password"
+              class="appearance-none relative block w-full px-3 py-2.5 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
+              placeholder="••••••••"
+            />
+          </div>
         </div>
 
-        <!-- Form: uses @submit.prevent to run `onSubmit` without page reload -->
-        <form class="space-y-4" @submit.prevent="onSubmit">
-
-          <!-- Email input group: label + BaseInput bound to `form.email` -->
-          <div class="space-y-2">
-            <label class="text-sm font-medium text-slate-700">Email</label>
-            <BaseInput v-model="form.email" type="email" placeholder="you@example.com" required />
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <input 
+              id="remember-me" 
+              name="remember-me" 
+              type="checkbox" 
+              v-model="rememberMe"
+              class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+            />
+            <label for="remember-me" class="ml-2 block text-sm text-gray-900 select-none">
+              ចងចាំខ្ញុំ
+            </label>
           </div>
 
-          <!-- Password input group: label + BaseInput bound to `form.password` -->
-          <div class="space-y-2">
-            <label class="text-sm font-medium text-slate-700">Password</label>
-            <BaseInput v-model="form.password" type="password" placeholder="Your password" required />
+          <div class="text-sm">
+            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
+              ភ្លេចលេខសម្ងាត់?
+            </a>
           </div>
+        </div>
 
-          <!-- Submit button: `BaseButton` receives props for text, color and loading state.
-               `:disabled` prevents submission when fields are empty. Clicking also calls `onSubmit`. -->
-          <BaseButton text="Login" color="primary" :loading="loading" :disabled="!form.email || !form.password" @click="onSubmit" />
+        <div>
+          <button 
+            type="submit" 
+            class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
+          >
+            ចូលប្រព័ន្ធ
+          </button>
+        </div>
+      </form>
 
-        </form>
-
-        <!-- Footer: link to registration page -->
-        <p class="mt-6 text-center text-sm text-slate-600">
-          Don't have an account?
-          <RouterLink class="font-semibold text-blue-600 hover:text-blue-700" to="/register">Create one</RouterLink>
-        </p>
-
-      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-// Imports: Vue composition API utilities and shared base components
-import { reactive, ref } from 'vue'
-import BaseInput from '@/components/base/BaseInput.vue'
-import BaseButton from '@/components/base/BaseButton.vue'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-// `loading` indicates an in-flight async request (disables the button and shows spinner)
-const loading = ref(false)
+const router = useRouter()
 
-// `form` holds the reactive form fields bound via `v-model` to the inputs above
-const form = reactive({
-  email: '',
-  password: ''
-})
+// បង្កើត State សម្រាប់រក្សាទុកទិន្នន័យ Form
+const email = ref('')
+const password = ref('')
+const rememberMe = ref(false)
 
-// `onSubmit` validates the form, toggles loading, performs the submit (simulated here),
-// and then clears the loading state. Keep it `async` so real API calls can be awaited.
-const onSubmit = async () => {
-  // Basic client-side validation: ensure fields are not empty
-  if (!form.email || !form.password) return
-
-  loading.value = true
-
-  // Log the payload for debugging (replace with real API call)
-  console.log('Login submit', { ...form })
-
-  // simulate API call latency; replace this with an actual request
-  await new Promise(r => setTimeout(r, 1000))
-
-  // Reset loading after request completes
-  loading.value = false
+// Function សម្រាប់ដំណើរការពេលចុចប៊ូតុង Login
+const handleLogin = () => {
+  // ត្រង់នេះយើងគ្រាន់តែធ្វើតេស្តសិន នៅថ្ងៃក្រោយគ្រូនឹងឲ្យភ្ជាប់ជាមួយ API នៅក្នុង stores/auth.store.js
+  console.log('ទិន្នន័យដែលបានបំពេញ:', { 
+    email: email.value, 
+    password: password.value, 
+    rememberMe: rememberMe.value 
+  })
+  
+  // ឧទាហរណ៍៖ បើវាយត្រូវ ឲ្យវាលោតទៅទំព័រ Dashboard តែម្តង
+  if (email.value && password.value) {
+    alert('ចូលប្រព័ន្ធបានជោគជ័យ! (គំរូ)')
+    router.push('/dashboard')
+  }
 }
 </script>
